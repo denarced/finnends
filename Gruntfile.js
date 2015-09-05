@@ -24,6 +24,8 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
+  grunt.loadNpmTasks('grunt-contrib-compress');
+
   // Define the configuration for all the tasks
   grunt.initConfig({
 
@@ -266,6 +268,17 @@ module.exports = function (grunt) {
           dest: '<%= config.dist %>'
         }]
       }
+    },
+
+    compress: {
+        main: {
+            options: {
+                archive: 'deploy.tar.gz'
+            },
+            expand: true,
+            cwd: 'dist/',
+            src: '**/*'
+        }
     },
 
     // By default, your `index.html`'s <!-- Usemin block --> will take care

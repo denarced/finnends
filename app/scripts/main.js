@@ -1,7 +1,9 @@
 // jshint devel:true
+'use strict';
+
 var app = app || {};
 
-app.List = function(jQueryLi, jQuery) {
+app.newList = function(jQueryLi, jQuery) {
     return {
         clear: function() {
             jQueryLi.empty();
@@ -15,13 +17,13 @@ app.List = function(jQueryLi, jQuery) {
     };
 };
 
-app.Main = function(getMainInputText, list) {
+app.newMain = function(getMainInputText, list) {
     return {
-        _resetList: function(items) {
+        resetList: function(items) {
             list.clear();
             list.setItems(items);
         },
-        onMainInputChange: function(event) {
+        onMainInputChange: function() {
             var i,
                 each,
                 first,
@@ -29,25 +31,25 @@ app.Main = function(getMainInputText, list) {
                 matched = [],
                 inputText = getMainInputText();
 
-            if (inputText.length == 0) {
+            if (inputText.length === 0) {
                 return;
             }
 
             for (i = 0; i < app.words.length; i++) {
                 each = app.words[i];
                 first = each.lastIndexOf(inputText);
-                isAtEndOfWord = first == (each.length - inputText.length);
+                isAtEndOfWord = first === (each.length - inputText.length);
                 if (first >= 0 && isAtEndOfWord) {
                     matched.push(each);
                 }
             }
 
-            this._resetList(matched);
+            this.resetList(matched);
         }
     };
 };
 
-app.DelayedChangeEvent = function(
+app.newDelayedChangeEvent = function(
     delayInMs,
     listener,
     setTimeout,
@@ -69,12 +71,13 @@ app.DelayedChangeEvent = function(
     };
 };
 
+/*global $*/
 $(document).ready(function() {
-    var list = app.List($('#matchList'), $),
-        main = app.Main(function() {
+    var list = app.newList($('#matchList'), $),
+        main = app.newMain(function() {
             return $('#mainInput').val().trim().toLowerCase();
         }, list),
-        delayedChangeEvent = app.DelayedChangeEvent(
+        delayedChangeEvent = app.newDelayedChangeEvent(
             400,
             main,
             setTimeout,
